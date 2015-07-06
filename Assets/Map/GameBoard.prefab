@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MenuSpritePrefab: {fileID: 107684, guid: 2fb35b4665d0c4b819781a42fe63b927, type: 2}
-  moveOnly: {fileID: 21300010, guid: b38a5dadaa8d84e22bf7c657267d0429, type: 3}
-  attackSprite: {fileID: 21300000, guid: 9bca935c6b37e46b3af584fa63f37cd9, type: 3}
+  moveOnly: {fileID: 21300002, guid: 5c06c6272ec6940c78fff352f1738998, type: 3}
+  attackSprite: {fileID: 21300000, guid: 5c06c6272ec6940c78fff352f1738998, type: 3}
 --- !u!114 &11452602
 MonoBehaviour:
   m_ObjectHideFlags: 1

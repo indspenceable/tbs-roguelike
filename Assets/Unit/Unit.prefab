@@ -43,6 +43,7 @@ MonoBehaviour:
   tile: {fileID: 0}
   movement: 5
   team: 0
+  hp: 10
   usedThisTurn: 0
 --- !u!212 &21294782
 SpriteRenderer:
@@ -97,6 +98,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_SortingOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: hp
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

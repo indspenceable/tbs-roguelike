@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 public class ConfirmMovementOld : InputAction {
 	private Unit actor;
 	private Path path;
-	private GameManager manager;
+	private StageManager manager;
 	private Highlighter highlighter;
 	private List<Unit> unitsInRange;
 
@@ -13,12 +13,12 @@ public class ConfirmMovementOld : InputAction {
 	{
 		this.actor = act;
 		this.path = path;
-		this.manager = GameManager.instance;
+		this.manager = StageManager.current;
 		this.highlighter = manager.GetComponent<Highlighter>();
 		unitsInRange = new List<Unit>();
 
 		foreach(Unit u in this.manager.units) {
-			if (actor.canHitAtRange(u.tile.p.distance(actor.tile.p))) {
+			if (actor.CanHitAtRange(u.tile.p.distance(actor.tile.p))) {
 				unitsInRange.Add(u);
 			}
 		}

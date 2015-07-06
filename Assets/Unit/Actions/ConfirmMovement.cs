@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -32,11 +32,11 @@ public class ConfirmMovement : MonoBehaviour, MenuInput<ConfirmMovement.UnitActi
 	{
 		this.actor = act;
 		this.path = path;
-		GameManager manager = GameManager.instance;
+		StageManager manager = StageManager.current;
 		unitsInRange = new List<Unit>();
 		foreach(Unit otherUnit in manager.units) {
 			int distance = otherUnit.tile.p.distance(actor.tile.p);
-			if (actor.canHitAtRange(distance) && (actor.team != otherUnit.team) && (actor !=otherUnit)) {
+			if (actor.CanHitAtRange(distance) && (actor.team != otherUnit.team) && (actor !=otherUnit)) {
 				unitsInRange.Add(otherUnit);
 			}
 		}
@@ -44,7 +44,6 @@ public class ConfirmMovement : MonoBehaviour, MenuInput<ConfirmMovement.UnitActi
 		// Build a list of MenuOptions.
 		menuOptions = new List<GameObject>();
 		menuOptions.Add(buildSpriteOption(moveOnly, UnitAction.WAIT));
-
 
 		// Always can just stop
 		if (unitsInRange.Count > 0) {
@@ -59,13 +58,9 @@ public class ConfirmMovement : MonoBehaviour, MenuInput<ConfirmMovement.UnitActi
 		int c = menuOptions.Count;
 		List<Vector3> endingPositions = new List<Vector3>(c);
 
-		float scalar = 1f + c * 0f;
-
+		MenuPlacementManager menuPlacementManager = new ArcMenuPlacementManager(c);
 		for (int i = 0; i < c; i+= 1) {
-			float degrees = (Mathf.Lerp(0, 360, i/(float)(c)) +90) %360;
-			double rads = (Math.PI/180)*degrees;
-			Vector3 trig = new Vector3((float)Math.Cos(rads), (float)Math.Sin(rads));
-			endingPositions.Add(trig * scalar + actor.transform.position);
+			endingPositions.Add(menuPlacementManager.placement(i) + actor.transform.position);
 		}
 
 		while(dt < time){

@@ -15,7 +15,7 @@ public class BoundCameraToBoard : MonoBehaviour {
 	
 	void LateUpdate() {
 		Camera cam = GetComponent<Camera>();
-		GameManager map = mapManager.GetComponent<GameManager>();
+		StageManager map = mapManager.GetComponent<StageManager>();
 	
 		float viewportHeight = 2f * cam.orthographicSize;
 		float viewportWidth = viewportHeight * cam.aspect;

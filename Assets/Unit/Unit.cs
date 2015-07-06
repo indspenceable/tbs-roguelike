@@ -3,13 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Unit : MonoBehaviour {
+	public enum Team {
+		PLAYER,
+		BADDIE
+	}
+	
 	public Tile tile;
 	public int movement = 5;
-	public int team;
+	public Team team;
+	public int hp = 10;
+
 	public bool usedThisTurn;
 
-	public bool canHitAtRange(int i) {
+	public bool CanHitAtRange(int i) {
 		return i == 1;
+	}
+	public int GetDamageVs(Unit u) {
+		return 3;
 	}
 
 	public int cost(Tile t) {

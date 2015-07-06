@@ -6,19 +6,19 @@ public class UnitPlacementManager : MonoBehaviour {
 
 	public GameObject UnitPrefab;
 
-	private GameManager mapManager;
+	private StageManager mapManager;
 
 	public List<Unit> setupUnits() {
 		List<Unit> unitList = new List<Unit>();
 		// For now, just generate a single unit at 3, 3
-		unitList.Add(createUnitAt(3, 3, 0));
-		unitList.Add(createUnitAt(4, 3, 1));
+		unitList.Add(createUnitAt(3, 3, Unit.Team.PLAYER));
+		unitList.Add(createUnitAt(4, 3, Unit.Team.BADDIE));
 
 		return unitList;
 	}
 
-	public Unit createUnitAt(int x, int y, int team) {
-		Tile t = GetComponent<GameManager>().tiles[x][y];
+	public Unit createUnitAt(int x, int y, Unit.Team team) {
+		Tile t = GetComponent<StageManager>().tiles[x][y];
 		GameObject go = Instantiate(UnitPrefab, t.transform.position, Quaternion.identity) as GameObject;
 		Unit u = go.GetComponent<Unit>();
 		u.tile = t;

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,15 +7,15 @@ public class Movement : InputAction {
 	public Path currentPath;
 	private HashSet<Point> destinationPoints;
 
-	private GameManager manager;
+	private StageManager manager;
 	private Highlighter highlighter;
 
 	public void Setup(Unit actor) {
 		this.actor = actor;
-		this.manager = GameManager.instance;
+		this.manager = StageManager.current;
 		this.highlighter = manager.GetComponent<Highlighter>();
 
-		destinationPoints = new HashSet<Point>(Path.findPathsForUnit(actor, GameManager.instance).ConvertAll((Path input) => input.destination()));
+		destinationPoints = new HashSet<Point>(Path.findPathsForUnit(actor, StageManager.current).ConvertAll((Path input) => input.destination()));
 		currentPath = new Path(actor.tile.p);
 
 		RecalculateHighlights();
@@ -25,9 +25,9 @@ public class Movement : InputAction {
 		highlighter.removeAllHighlights();
 		foreach (Point dest in destinationPoints) {
 			Unit otherUnit = manager.tiles[dest.x][dest.y].unit;
-			if (otherUnit == null || (otherUnit != actor && otherUnit.team == actor.team)) {
+//			if (otherUnit == null || (otherUnit != actor && otherUnit.team == actor.team)) {
 				highlighter.highlight(dest, Highlight.Style.GREEN);
-			}
+//			}
 		}
 		for(int i = 0; i < currentPath.distance() - 1; i+= 1) {
 			highlighter.highlightPath(currentPath.at(i), currentPath.at(i+1));
@@ -36,13 +36,15 @@ public class Movement : InputAction {
 
 	public IEnumerator finishMovementCoroutine(float time) {
 		float dt = 0;
+		int distance = currentPath.distance();
+
 		for(;;){
 			dt += Time.deltaTime;
-			if (dt >= time) {
+			if (dt >= time || distance == 1) {
 				break;
 			}
 			//which step
-			float completedAMT = ((dt*(currentPath.distance()-1))/time);
+			float completedAMT = ((dt*(distance-1))/time);
 			int sq = (int)completedAMT;
 			float pct = completedAMT - sq;
 
@@ -69,6 +71,7 @@ public class Movement : InputAction {
 
 	public void OnUnitClicked(Unit u) {
 		if (u == actor) {
+			OnTileClicked(u.tile);
 		}
 	}
 	public void OnTileClicked(Tile t) {

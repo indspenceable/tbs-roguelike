@@ -1,17 +1,17 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 public class Path {
-	public static List<Path> findPathsForUnit(Unit actor, GameManager manager){
+	public static List<Path> findPathsForUnit(Unit actor, StageManager manager){
 		return findPathsMaster(actor, manager, null);
 	}
 
-	public static Path findPathForUnit(Unit actor, GameManager manager, Point target) {
+	public static Path findPathForUnit(Unit actor, StageManager manager, Point target) {
 		return findPathsMaster(actor, manager, target)[0];
 	}
 
-	private static List<Path> findPathsMaster(Unit actor, GameManager manager, Point target){
+	private static List<Path> findPathsMaster(Unit actor, StageManager manager, Point target){
 		Point start = actor.tile.p;
 
 		List<Path> discoveredPaths = new List<Path>();
@@ -55,11 +55,10 @@ public class Path {
 			return new List<Path>();
 		}
 
-		discoveredPaths.RemoveAt(0);
 		return discoveredPaths;
 	}
 
-	private static void queueUp(Unit actor, GameManager manager, List<Path> paths, Path newPath, Point target) {
+	private static void queueUp(Unit actor, StageManager manager, List<Path> paths, Path newPath, Point target) {
 		if (target == null) {
 			paths.Add(newPath);
 			return;
@@ -75,7 +74,7 @@ public class Path {
 		paths.Add(newPath);
 	}
 
-	private static int totalCost(Unit actor, GameManager manager, Path newPath, Point target) {
+	private static int totalCost(Unit actor, StageManager manager, Path newPath, Point target) {
 		Point dest = newPath.destination();
 		int distanceCost = (int)Mathf.Sqrt((target.x - dest.x)*(target.x - dest.x) + (target.y - dest.y)*(target.y - dest.y));
 		return distanceCost + newPath.cost(actor, manager);
@@ -94,7 +93,7 @@ public class Path {
 		return true;
 	}
 
-	private static bool onMap(Point point, GameManager manager) {
+	private static bool onMap(Point point, StageManager manager) {
 		return !(point.x < 0 || point.y < 0 || point.x >= manager.width || point.y >= manager.height);
 	}
 
@@ -130,7 +129,7 @@ public class Path {
 	public int distance() {
 		return points.Count;
 	}
-	public int cost(Unit actor, GameManager manager) {
+	public int cost(Unit actor, StageManager manager) {
 		int sum = 0;
 		foreach (Point p in points) {
 			if (p == points[0]) {
