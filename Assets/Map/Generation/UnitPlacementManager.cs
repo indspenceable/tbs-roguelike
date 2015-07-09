@@ -20,6 +20,7 @@ public class UnitPlacementManager : MonoBehaviour {
 	public Unit createUnitAt(int x, int y, Unit.Team team) {
 		Tile t = GetComponent<StageManager>().tiles[x][y];
 		GameObject go = Instantiate(UnitPrefab, t.transform.position, Quaternion.identity) as GameObject;
+		go.transform.parent = transform;
 		Unit u = go.GetComponent<Unit>();
 		u.tile = t;
 		t.unit = u;

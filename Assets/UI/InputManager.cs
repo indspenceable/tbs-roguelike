@@ -2,17 +2,6 @@
 using System.Collections;
 
 public class InputManager : MonoBehaviour {
-	// Static singleton instance
-	private static InputManager instance;
-	
-	// Static singleton property
-	public static InputManager Instance
-	{
-		// Here we use the ?? operator, to return 'instance' if 'instance' does not equal null
-		// otherwise we assign instance to a new component and return that
-		get { return instance ?? (instance = new GameObject("InputManager").AddComponent<InputManager>()); }
-	}
-
 	public void OnGUI() {
 	}
 
@@ -42,9 +31,11 @@ public class InputManager : MonoBehaviour {
 	public void OnUnitClicked (Unit unit)
 	{
 		if (currentAction == null) {
-			Movement m = new Movement();
-			m.Setup(unit);
-			currentAction = m;
+		    if (unit.team == Unit.Team.PLAYER && !unit.usedThisTurn) {
+				Movement m = new Movement();
+				m.Setup(unit);
+				currentAction = m;
+			}
 		} else {
 			currentAction.OnUnitClicked(unit);
 		}

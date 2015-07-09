@@ -7,13 +7,13 @@ public class AttackTargetSelectAction : InputAction {
 	public Path path;
 	public List<Unit> targetableUnits;
 
-	private StageManager manager;
+	private StageManager currentStage;
 	private Highlighter highlighter;
 	
 	public void Setup(Unit actor, Path path, List<Unit> targetableUnits) {
 		this.actor = actor;
-		this.manager = StageManager.current;
-		this.highlighter = manager.GetComponent<Highlighter>();
+		this.currentStage = CampaignManager.Instance.CurrentStage();
+		this.highlighter = currentStage.GetComponent<Highlighter>();
 		this.targetableUnits = targetableUnits;
 
 		RecalculateHighlights();
@@ -29,24 +29,30 @@ public class AttackTargetSelectAction : InputAction {
 	public IEnumerator onTriggerAttack(Unit u) {
 		// Hey! We can attack this unit! Let's do it!
 		highlighter.removeAllHighlights();
-		InputManager.Instance.currentAction = new NoInput();
-		yield return manager.StartCoroutine(manager.spawnBattleExecutor().doCombat(actor, u));
-		manager.RemoveDeadUnits();
+		currentStage.InputManager.currentAction = new NoInput();
+		actor.usedThisTurn = true;
+		yield return currentStage.StartCoroutine(currentStage.spawnBattleExecutor().doCombat(actor, u));
+		currentStage.RemoveDeadUnits();
 
 
-		if (manager.PlayerVictory()) {
+		if (currentStage.PlayerVictory()) {
 			// If the player won, deal with it.
-			yield return manager.DoPlayerVictory();
-		} else if (manager.PlayerDefeat()) {
+			CampaignManager campaign = CampaignManager.Instance;
+			yield return campaign.StartCoroutine(campaign.DoPlayerVictory());
+		} else if (currentStage.PlayerDefeat()) {
+			CampaignManager campaign = CampaignManager.Instance;
+			yield return campaign.StartCoroutine(campaign.DoPlayerDefeat());
+		} else if (currentStage.NoMoreUnitsToMove(Unit.Team.PLAYER)) {
+			yield return currentStage.StartCoroutine(currentStage.TakeEnemyTurn());
 		} else {
 			// Else, go back to input entry mode.
-			InputManager.Instance.currentAction = null;
+			currentStage.InputManager.currentAction = null;
 		}
 	}
 
 	public void OnUnitClicked(Unit u) {
 		if (targetableUnits.Contains(u)) {
-			manager.StartCoroutine(onTriggerAttack(u));
+			currentStage.StartCoroutine(onTriggerAttack(u));
 		}
 	}
 	public void OnTileClicked(Tile t) {

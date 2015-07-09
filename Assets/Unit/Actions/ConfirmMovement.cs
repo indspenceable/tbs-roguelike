@@ -17,6 +17,7 @@ public class ConfirmMovement : MonoBehaviour, MenuInput<ConfirmMovement.UnitActi
 	private Path path;
 	private List<Unit> unitsInRange;
 	private List<GameObject> menuOptions;
+	private StageManager currentStage;
 
 	// No Map Inputs
 	public void OnUnitClicked (Unit u) {}
@@ -32,9 +33,9 @@ public class ConfirmMovement : MonoBehaviour, MenuInput<ConfirmMovement.UnitActi
 	{
 		this.actor = act;
 		this.path = path;
-		StageManager manager = StageManager.current;
+		currentStage = CampaignManager.Instance.CurrentStage();
 		unitsInRange = new List<Unit>();
-		foreach(Unit otherUnit in manager.units) {
+		foreach(Unit otherUnit in currentStage.units) {
 			int distance = otherUnit.tile.p.distance(actor.tile.p);
 			if (actor.CanHitAtRange(distance) && (actor.team != otherUnit.team) && (actor !=otherUnit)) {
 				unitsInRange.Add(otherUnit);
@@ -107,11 +108,15 @@ public class ConfirmMovement : MonoBehaviour, MenuInput<ConfirmMovement.UnitActi
 		clearMenu();
 		AttackTargetSelectAction attackSelector = new AttackTargetSelectAction();
 		attackSelector.Setup(actor, path, unitsInRange);	
-		InputManager.Instance.currentAction = attackSelector;
+		currentStage.InputManager.currentAction = attackSelector;
 	}
 	private void wait() {
 		clearMenu();
 		actor.usedThisTurn = true;
-		InputManager.Instance.currentAction = null;
+		if (currentStage.NoMoreUnitsToMove(Unit.Team.PLAYER)) {
+			currentStage.StartCoroutine(currentStage.TakeEnemyTurn());
+		} else {
+			currentStage.InputManager.currentAction = null;
+		}
 	}
 }

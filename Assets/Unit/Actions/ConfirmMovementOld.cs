@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class ConfirmMovementOld : InputAction {
 	private Unit actor;
 	private Path path;
-	private StageManager manager;
+	private StageManager currentStage;
 	private Highlighter highlighter;
 	private List<Unit> unitsInRange;
 
@@ -13,11 +13,11 @@ public class ConfirmMovementOld : InputAction {
 	{
 		this.actor = act;
 		this.path = path;
-		this.manager = StageManager.current;
-		this.highlighter = manager.GetComponent<Highlighter>();
+		this.currentStage = CampaignManager.Instance.CurrentStage();
+		this.highlighter = currentStage.GetComponent<Highlighter>();
 		unitsInRange = new List<Unit>();
 
-		foreach(Unit u in this.manager.units) {
+		foreach(Unit u in this.currentStage.units) {
 			if (actor.CanHitAtRange(u.tile.p.distance(actor.tile.p))) {
 				unitsInRange.Add(u);
 			}
@@ -42,7 +42,7 @@ public class ConfirmMovementOld : InputAction {
 			// Stay put!
 			u.usedThisTurn = true;
 			highlighter.removeAllHighlights();
-			InputManager.Instance.currentAction = null;
+			currentStage.InputManager.currentAction = null;
 		} else {
 			if (unitsInRange.Contains(u)) {
 				// Attack!

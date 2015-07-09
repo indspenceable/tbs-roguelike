@@ -7,7 +7,7 @@ public class Highlighter : MonoBehaviour {
 	private GameObject TileHighlight;
 
 	void Start() {
-		container = new GameObject();
+		container = new GameObject("Highlight Container");
 		container.transform.parent = transform;
 	}
 

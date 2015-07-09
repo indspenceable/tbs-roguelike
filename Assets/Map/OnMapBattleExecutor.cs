@@ -3,32 +3,34 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class OnMapBattleExecutor : BattleExecutor {
-	private StageManager manager;
+	private StageManager stageManager;
 
 	public OnMapBattleExecutor() {
-		this.manager = StageManager.current;
+		this.stageManager = CampaignManager.Instance.CurrentStage();
 	}
 
 	public IEnumerator doCombat(Unit attacker, Unit defender) {
 		Debug.Log ("Woop!");
-		yield return manager.StartCoroutine(doFight(attacker, defender));
+		yield return stageManager.StartCoroutine(doFight(attacker, defender));
 		// Do experience + level up if needed.
 	}
 
 	private IEnumerator doFight(Unit attacker, Unit defender) {
-		yield return manager.StartCoroutine(animateAttack(attacker, defender, 0.3f));
+		yield return stageManager.StartCoroutine(animateAttack(attacker, defender, 0.3f));
+		yield return new WaitForSeconds(0.2f);
 		defender.hp -= attacker.GetDamageVs(defender);
 		// if defender is alive
 		if (defender.hp <= 0) {
-			yield return manager.StartCoroutine(animateDeath(defender, 2f));
+			yield return stageManager.StartCoroutine(animateDeath(defender, 2f));
 			yield break;
 		}
+
+		yield return stageManager.StartCoroutine(animateAttack(defender, attacker, 0.3f));
 		yield return new WaitForSeconds(0.2f);
-		yield return manager.StartCoroutine(animateAttack(defender, attacker, 0.3f));
 		attacker.hp -= defender.GetDamageVs(attacker);
 		// if defender is alive
 		if (attacker.hp <= 0) {
-			yield return manager.StartCoroutine(animateDeath(attacker, 2f));
+			yield return stageManager.StartCoroutine(animateDeath(attacker, 2f));
 			yield break;
 		}
 	}

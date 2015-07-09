@@ -7,11 +7,17 @@ public class Tile : MonoBehaviour {
 	public Point p;
 	public Unit unit;
 
+	private StageManager currentStage;
+
+	void Start() {
+		currentStage = CampaignManager.Instance.CurrentStage();
+	}
+
 	public void OnMouseDown() {
 		if (unit == null) {
-			InputManager.Instance.OnTileClicked(this);
+			currentStage.InputManager.OnTileClicked(this);
 		} else {
-			InputManager.Instance.OnUnitClicked(unit);
+			currentStage.InputManager.OnUnitClicked(unit);
 		}
 	}
 }

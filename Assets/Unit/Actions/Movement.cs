@@ -7,15 +7,15 @@ public class Movement : InputAction {
 	public Path currentPath;
 	private HashSet<Point> destinationPoints;
 
-	private StageManager manager;
+	private StageManager currentStage;
 	private Highlighter highlighter;
 
 	public void Setup(Unit actor) {
 		this.actor = actor;
-		this.manager = StageManager.current;
-		this.highlighter = manager.GetComponent<Highlighter>();
+		this.currentStage = CampaignManager.Instance.CurrentStage();
+		this.highlighter = currentStage.GetComponent<Highlighter>();
 
-		destinationPoints = new HashSet<Point>(Path.findPathsForUnit(actor, StageManager.current).ConvertAll((Path input) => input.destination()));
+		destinationPoints = new HashSet<Point>(Path.findPathsForUnit(actor, currentStage).ConvertAll((Path input) => input.destination()));
 		currentPath = new Path(actor.tile.p);
 
 		RecalculateHighlights();
@@ -24,7 +24,7 @@ public class Movement : InputAction {
 	public void RecalculateHighlights() {
 		highlighter.removeAllHighlights();
 		foreach (Point dest in destinationPoints) {
-			Unit otherUnit = manager.tiles[dest.x][dest.y].unit;
+			Unit otherUnit = currentStage.tiles[dest.x][dest.y].unit;
 //			if (otherUnit == null || (otherUnit != actor && otherUnit.team == actor.team)) {
 				highlighter.highlight(dest, Highlight.Style.GREEN);
 //			}
@@ -34,10 +34,10 @@ public class Movement : InputAction {
 		}
 	}
 
-	public IEnumerator finishMovementCoroutine(float time) {
+	public static IEnumerator moveUnitAlongPath(float time, Unit u, Path path, StageManager stage) {
 		float dt = 0;
-		int distance = currentPath.distance();
-
+		int distance = path.distance();
+		
 		for(;;){
 			dt += Time.deltaTime;
 			if (dt >= time || distance == 1) {
@@ -47,24 +47,28 @@ public class Movement : InputAction {
 			float completedAMT = ((dt*(distance-1))/time);
 			int sq = (int)completedAMT;
 			float pct = completedAMT - sq;
-
-			Point p1 = currentPath.at(sq);
-			Point p2 = currentPath.at(sq+1);
+			
+			Point p1 = path.at(sq);
+			Point p2 = path.at(sq+1);
 			float x = Mathf.Lerp(p1.x, p2.x, pct);
 			float y = Mathf.Lerp(p1.y, p2.y, pct);
-
-			actor.transform.position = new Vector2(x, y);
+			
+			u.transform.position = new Vector2(x, y);
 			yield return null;
-
+			
 		}
-		Point dest = currentPath.destination();
-		actor.transform.position = new Vector2(dest.x, dest.y);
-		actor.tile.unit = null;
-		actor.tile = manager.tiles[dest.x][dest.y];
-		actor.tile.unit = actor;
+		Point dest = path.destination();
+		u.transform.position = new Vector2(dest.x, dest.y);
+		u.tile.unit = null;
+		u.tile = stage.tiles[dest.x][dest.y];
+		u.tile.unit = u;
+	}
 
-		ConfirmMovement confirmMovement = manager.GetComponent<ConfirmMovement>();
-		InputManager.Instance.currentAction = confirmMovement;
+	public IEnumerator finishMovementCoroutine(float time) {
+		yield return currentStage.StartCoroutine(moveUnitAlongPath(time, actor, currentPath, currentStage));
+
+		ConfirmMovement confirmMovement = currentStage.GetComponent<ConfirmMovement>();
+		currentStage.InputManager.currentAction = confirmMovement;
 		confirmMovement.SetupAndInstall(actor, currentPath);
 	}
 
@@ -80,11 +84,11 @@ public class Movement : InputAction {
 		if (t.p.Equals(currentPath.destination())) {
 			// We're good to go!
 			highlighter.removeAllHighlights();
-			InputManager.Instance.currentAction = new NoInput();
-			manager.StartCoroutine(finishMovementCoroutine(0.1f * currentPath.distance()));
+			currentStage.InputManager.currentAction = new NoInput();
+			currentStage.StartCoroutine(finishMovementCoroutine(0.1f * currentPath.distance()));
 		} else {
 			highlighter.removeAllHighlights();
-			InputManager.Instance.currentAction = null;
+			currentStage.InputManager.currentAction = null;
 		}
 	}
 	public void OnTileHovered(Tile t) {
@@ -100,7 +104,7 @@ public class Movement : InputAction {
 				Path copyPath = new Path(currentPath);
 				copyPath.TrimTo(currentPath.at (i));
 				Path newPath = new Path(copyPath, t.p);
-				if (newPath.cost(actor, manager) <= actor.movement) {
+				if (newPath.cost(actor, currentStage) <= actor.movement) {
 					currentPath = newPath;
 					RecalculateHighlights();
 					return;
@@ -110,7 +114,7 @@ public class Movement : InputAction {
 
 		// Are we pathable?
 		if (destinationPoints.Contains(t.p)) {
-			currentPath = Path.findPathForUnit(actor, manager, t.p);
+			currentPath = Path.findPathForUnit(actor, currentStage, t.p);
 		} else {
 			// Default to no path, if we're not already set to that.
 			currentPath = new Path(actor.tile.p);

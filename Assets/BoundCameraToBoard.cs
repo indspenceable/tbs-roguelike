@@ -7,7 +7,7 @@ public class BoundCameraToBoard : MonoBehaviour {
 	private float minY;
 	private float maxY;
 
-	public GameObject mapManager;
+	public GameObject stage;
 
 	void Start() {
 
@@ -15,7 +15,7 @@ public class BoundCameraToBoard : MonoBehaviour {
 	
 	void LateUpdate() {
 		Camera cam = GetComponent<Camera>();
-		StageManager map = mapManager.GetComponent<StageManager>();
+		StageManager map = stage.GetComponent<StageManager>();
 	
 		float viewportHeight = 2f * cam.orthographicSize;
 		float viewportWidth = viewportHeight * cam.aspect;

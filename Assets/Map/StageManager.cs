@@ -2,34 +2,33 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class StageManager : MonoBehaviour {
-	// Static singleton instance
-	public static StageManager current;
-	
-	// Use this for initialization
-	void Start () {
-		tilesContainer = new GameObject("Tile Container");
-		tilesContainer.transform.parent = transform;
-
-		// TODO is this right?
-		if (current != null) {
-			Destroy(this.gameObject);
-		} else {
-			current = this;
-			Build();
-		}
-	}
-	
+public class StageManager : MonoBehaviour {	
 	[HideInInspector]
 	public int width;
 	[HideInInspector]
 	public int height;
-
-
+	
 	[HideInInspector]
 	public List<List<Tile>> tiles;
 	public List<Unit> units;
 	private GameObject tilesContainer;
+
+	// Static singleton instance
+	private InputManager inputManagerInstance;
+	
+	// Static singleton property
+	public InputManager InputManager
+	{
+		// Here we use the ?? operator, to return 'instance' if 'instance' does not equal null
+		// otherwise we assign instance to a new component and return that
+		get { 
+			if (inputManagerInstance == null) {
+				inputManagerInstance = new GameObject("InputManager").AddComponent<InputManager>();
+				inputManagerInstance.transform.parent = transform;
+			}
+			return inputManagerInstance;
+		}
+	}
 
 	public void RemoveDeadUnits () {
 		foreach(Unit u in units.FindAll((Unit u) => u.hp <= 0)) {
@@ -38,7 +37,11 @@ public class StageManager : MonoBehaviour {
 		}
 	}
 
-	void Build() {
+
+	public void Build() {
+		tilesContainer = new GameObject("Tile Container");
+		tilesContainer.transform.parent = transform;
+
 		MapGenerationManager mapGenerator = GetComponent<MapGenerationManager>();
 		mapGenerator.Generate();
 
@@ -62,15 +65,55 @@ public class StageManager : MonoBehaviour {
 		units = GetComponent<UnitPlacementManager>().setupUnits();
 	}
 
+	public IEnumerator TakeEnemyTurn(){
+		InputManager.currentAction = new NoInput();
+
+		foreach (Unit u in units) {
+			if (u.team == Unit.Team.BADDIE) {
+				u.usedThisTurn = false;
+			}
+		}
+
+		foreach (Unit u in units) {
+			if (u.team == Unit.Team.BADDIE) {
+				List<Path> paths = Path.findPathsForUnit(u, this).FindAll((Path path) => path.distance() > 2);
+				if (paths.Count > 0) {
+					Path p = paths[Random.Range(0, paths.Count-1)];
+					yield return StartCoroutine(Movement.moveUnitAlongPath(0.1f*p.distance(), u, p, this));
+				}
+			}
+		}
+
+		foreach (Unit u in units) {
+			if (u.team == Unit.Team.PLAYER) {
+				u.usedThisTurn = false;
+			}
+		}
+
+		InputManager.currentAction = null;
+	}
+
 	public BattleExecutor spawnBattleExecutor() {
 		return new OnMapBattleExecutor();
 	}
 
-	public bool PlayerVictory () {
-		return false;
+	public bool NoMoreUnitsToMove(Unit.Team team) {
+		foreach (Unit u in units) {
+			if (u.team == team && !u.usedThisTurn) {
+				return false;
+			}
+		}
+		return true;
 	}
-	public IEnumerator DoPlayerVictory() {
-		yield return null;
+
+	public bool PlayerVictory () {
+		foreach(Unit u in units) {
+			if (u.team == Unit.Team.BADDIE) {
+				Debug.Log ("HI BADDIE");
+				return false;
+			}
+		}
+		return true;
 	}
 	public bool PlayerDefeat () {
 		return false;

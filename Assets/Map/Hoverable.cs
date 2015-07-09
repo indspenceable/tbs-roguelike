@@ -5,10 +5,12 @@ public class Hoverable : MonoBehaviour {
 	bool hover;
 	Camera cam;
 	Plane p;
+	StageManager currentStage;
 
 	// Use this for initialization
 	void Start () {
 		cam = Camera.main;
+		currentStage = CampaignManager.Instance.CurrentStage();
 	}
 	
 	// Update is called once per frame
@@ -26,9 +28,9 @@ public class Hoverable : MonoBehaviour {
 
 		if (newHover != hover) {
 			if (newHover) {
-				InputManager.Instance.TileHovered(GetComponent<Tile>());
+				currentStage.InputManager.TileHovered(GetComponent<Tile>());
 			} else {
-				InputManager.Instance.StopTileHovered(GetComponent<Tile>());
+				currentStage.InputManager.StopTileHovered(GetComponent<Tile>());
 			}
 		}
 	}
