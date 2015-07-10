@@ -13,8 +13,10 @@ public class Unit : MonoBehaviour {
 	}
 
 	Animator animator;
+	SpriteRenderer spriteRenderer;
 	void Start() {
 		animator = GetComponent<Animator>();
+		spriteRenderer = GetComponent<SpriteRenderer>();
 		animator.SetInteger("team", (int)team);
 		animator.SetInteger("class", (int)klass);
 		animator.SetInteger("animation", 0);
@@ -51,7 +53,20 @@ public class Unit : MonoBehaviour {
 
 	public int hp = 10;
 
-	public bool usedThisTurn;
+	private bool _usedThisTurn;
+	public bool usedThisTurn {
+		get {
+			return _usedThisTurn;
+		}
+		set {
+			if (value) {
+				spriteRenderer.color = new Color(0.5f, 0.5f, 0.5f);
+			} else {
+				spriteRenderer.color = new Color(1f, 1f, 1f);
+			}
+			_usedThisTurn = value;
+		}
+	}
 
 	public bool CanHitAtRange(int i) {
 		return i == 1;

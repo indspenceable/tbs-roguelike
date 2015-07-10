@@ -30,8 +30,8 @@ public class AttackTargetSelectAction : InputAction {
 		// Hey! We can attack this unit! Let's do it!
 		highlighter.removeAllHighlights();
 		currentStage.InputManager.currentAction = new NoInput();
-		actor.usedThisTurn = true;
 		yield return currentStage.StartCoroutine(currentStage.spawnBattleExecutor().doCombat(actor, u));
+		actor.usedThisTurn = true;
 		currentStage.RemoveDeadUnits();
 
 
