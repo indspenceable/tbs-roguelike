@@ -10,7 +10,6 @@ public class OnMapBattleExecutor : BattleExecutor {
 	}
 
 	public IEnumerator doCombat(Unit attacker, Unit defender) {
-		Debug.Log ("Woop!");
 		yield return stageManager.StartCoroutine(doFight(attacker, defender));
 		// Do experience + level up if needed.
 	}
@@ -21,7 +20,7 @@ public class OnMapBattleExecutor : BattleExecutor {
 		defender.hp -= attacker.GetDamageVs(defender);
 		// if defender is alive
 		if (defender.hp <= 0) {
-			yield return stageManager.StartCoroutine(animateDeath(defender, 2f));
+			yield return stageManager.StartCoroutine(animateDeath(defender, 0.2f));
 			yield break;
 		}
 
@@ -30,7 +29,7 @@ public class OnMapBattleExecutor : BattleExecutor {
 		attacker.hp -= defender.GetDamageVs(attacker);
 		// if defender is alive
 		if (attacker.hp <= 0) {
-			yield return stageManager.StartCoroutine(animateDeath(attacker, 2f));
+			yield return stageManager.StartCoroutine(animateDeath(attacker, 0.2f));
 			yield break;
 		}
 	}

@@ -109,7 +109,6 @@ public class StageManager : MonoBehaviour {
 	public bool PlayerVictory () {
 		foreach(Unit u in units) {
 			if (u.team == Unit.Team.BADDIE) {
-				Debug.Log ("HI BADDIE");
 				return false;
 			}
 		}

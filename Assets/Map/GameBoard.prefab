@@ -57,7 +57,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49fc6c2baccff4ca0bfe1937d6ffef8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UnitPrefab: {fileID: 130072, guid: 93e5286bff62e422c9dc391c4f8db5de, type: 2}
+  UnitPrefab: {fileID: 142718, guid: ab3ade8fb268d40e295ac022cfd45d70, type: 2}
 --- !u!114 &11459490
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -118,6 +118,10 @@ Prefab:
       propertyPath: WallPrefab
       value: 
       objectReference: {fileID: 191226, guid: 88c067a951d0f4dc081e29f2fe7c19f4, type: 2}
+    - target: {fileID: 0}
+      propertyPath: UnitPrefab
+      value: 
+      objectReference: {fileID: 142718, guid: ab3ade8fb268d40e295ac022cfd45d70, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 170800}
