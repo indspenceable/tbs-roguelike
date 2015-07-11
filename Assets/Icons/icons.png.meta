@@ -1,11 +1,12 @@
 fileFormatVersion: 2
 guid: 5c06c6272ec6940c78fff352f1738998
-timeCreated: 1436123828
+timeCreated: 1436511139
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: icons_0
     21300002: icons_1
+    21300004: icons_2
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -65,6 +66,16 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 16
+        y: 104
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: icons_2
+      rect:
+        serializedVersion: 2
+        x: 32
         y: 104
         width: 16
         height: 16

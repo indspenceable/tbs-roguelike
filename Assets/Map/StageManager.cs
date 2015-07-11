@@ -68,10 +68,9 @@ public class StageManager : MonoBehaviour {
 	public IEnumerator TakeEnemyTurn(){
 		InputManager.currentAction = new NoInput();
 
+
 		foreach (Unit u in units) {
-			if (u.team == Unit.Team.BADDIE) {
-				u.usedThisTurn = false;
-			}
+			u.usedThisTurn = false;
 		}
 
 		foreach (Unit u in units) {
@@ -81,12 +80,6 @@ public class StageManager : MonoBehaviour {
 					Path p = paths[Random.Range(0, paths.Count-1)];
 					yield return StartCoroutine(Movement.moveUnitAlongPath(0.1f*p.distance(), u, p, this));
 				}
-			}
-		}
-
-		foreach (Unit u in units) {
-			if (u.team == Unit.Team.PLAYER) {
-				u.usedThisTurn = false;
 			}
 		}
 

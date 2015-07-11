@@ -11,6 +11,8 @@ public class ConfirmMovement : MonoBehaviour, MenuInput<ConfirmMovement.UnitActi
 	private Sprite moveOnly;
 	[SerializeField]
 	private Sprite attackSprite;
+	[SerializeField]
+	private Sprite cancelMovementSprite;
 
 	// Fields
 	private Unit actor;
@@ -26,7 +28,8 @@ public class ConfirmMovement : MonoBehaviour, MenuInput<ConfirmMovement.UnitActi
 
 	public enum UnitAction {
 		ATTACK,
-		WAIT
+		WAIT,
+		CANCEL,
 	}
 	
 	public void SetupAndInstall (Unit act, Path path)
@@ -50,6 +53,10 @@ public class ConfirmMovement : MonoBehaviour, MenuInput<ConfirmMovement.UnitActi
 		if (unitsInRange.Count > 0) {
 			menuOptions.Add(buildSpriteOption(attackSprite, UnitAction.ATTACK));
 		}
+
+		menuOptions.Add(buildSpriteOption(cancelMovementSprite, UnitAction.CANCEL));
+		// Show left to right
+		menuOptions.Reverse();
 
 		StartCoroutine(AnimateAndInstall(0.1f, menuOptions));
 	}
@@ -87,12 +94,16 @@ public class ConfirmMovement : MonoBehaviour, MenuInput<ConfirmMovement.UnitActi
 	}
 
 	public void optionSelected(UnitAction choice) {
+		clearMenu();
 		switch(choice) {
 		case UnitAction.ATTACK:
 			attack();
 			return;
 		case UnitAction.WAIT:
 			wait();
+			return;
+		case UnitAction.CANCEL:
+			currentStage.StartCoroutine(cancel());
 			return;
 		}
 	}
@@ -104,14 +115,17 @@ public class ConfirmMovement : MonoBehaviour, MenuInput<ConfirmMovement.UnitActi
 	}
 
 
+	private IEnumerator cancel() {
+		currentStage.InputManager.currentAction = new NoInput();
+		yield return StartCoroutine(Movement.moveUnitAlongPath(0.05f*path.distance(), actor, path.reversed(), currentStage));
+		currentStage.InputManager.currentAction = null;
+	}
 	private void attack() {
-		clearMenu();
 		AttackTargetSelectAction attackSelector = new AttackTargetSelectAction();
 		attackSelector.Setup(actor, path, unitsInRange);	
 		currentStage.InputManager.currentAction = attackSelector;
 	}
 	private void wait() {
-		clearMenu();
 		actor.usedThisTurn = true;
 		if (currentStage.NoMoreUnitsToMove(Unit.Team.PLAYER)) {
 			currentStage.StartCoroutine(currentStage.TakeEnemyTurn());

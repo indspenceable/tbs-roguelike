@@ -150,4 +150,9 @@ public class Path {
 		}
 		return str;
 	}
+	public Path reversed() {
+		Path o = new Path(this);
+		o.points.Reverse();
+		return o;
+	}
 }
