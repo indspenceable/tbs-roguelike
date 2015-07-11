@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+
 
 public class CampaignManager : MonoBehaviour {
 	public static CampaignManager Instance;
@@ -10,18 +12,27 @@ public class CampaignManager : MonoBehaviour {
 	private GameObject StagePrefab;
 	private StageManager currentStage = null;
 	private Camera mainCamera;
+	private List<UnitStats> units;
 
 	void Start() {
-		Instance = this;
-		mainCamera = Camera.main;
-
-		buildNewStage();
+		if (Instance == null) {
+			Instance = this;
+			mainCamera = Camera.main;
+			BuildPlayerArmy();
+			BuildNewStage(units);
+		}
 	}
 
-	private void buildNewStage() {
+	private void BuildPlayerArmy() {
+		units = new List<UnitStats>();
+		units.Add(UnitStats.initAsEnemy(new UnitClass.Soldier(), 1, 1));
+		units.Add(UnitStats.initAsEnemy(new UnitClass.Flyer(), 1, 1));
+	}
+
+	private void BuildNewStage(List<UnitStats> playerArmy) {
 		GameObject g = Instantiate(StagePrefab) as GameObject;
 		currentStage = g.GetComponent<StageManager>();
-		currentStage.Build();
+		currentStage.Build(playerArmy);
 		BoundCameraToBoard b = mainCamera.GetComponent<BoundCameraToBoard>();
 		if (b == null) {
 			b = mainCamera.gameObject.AddComponent<BoundCameraToBoard>();
@@ -39,7 +50,7 @@ public class CampaignManager : MonoBehaviour {
 	public IEnumerator DoPlayerVictory() {
 		yield return StartCoroutine(FadeOut(3f));
 		Destroy(currentStage.gameObject);
-		buildNewStage();
+		BuildNewStage(units);
 		yield return null;
 	}
 

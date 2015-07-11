@@ -38,7 +38,7 @@ public class StageManager : MonoBehaviour {
 	}
 
 
-	public void Build() {
+	public void Build(List<UnitStats> playerUnits) {
 		tilesContainer = new GameObject("Tile Container");
 		tilesContainer.transform.parent = transform;
 
@@ -62,7 +62,7 @@ public class StageManager : MonoBehaviour {
 			tiles.Add (column);
 		}
 
-		units = GetComponent<UnitPlacementManager>().setupUnits();
+		units = GetComponent<UnitPlacementManager>().setupUnits(playerUnits);
 	}
 
 	public IEnumerator TakeEnemyTurn(){
