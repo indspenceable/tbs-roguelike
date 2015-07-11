@@ -24,6 +24,19 @@ public class CameraDrag : MonoBehaviour
 			Vector3 newPos = worldPointForCurrentMouse();
 			transform.Translate(oldPos-newPos);
 		}
+
+		if (Input.GetKeyDown(KeyCode.W)) {
+			transform.Translate(Vector2.up);
+		}
+		if (Input.GetKeyDown(KeyCode.A)) {
+			transform.Translate(Vector2.left);
+		}
+		if (Input.GetKeyDown(KeyCode.S)) {
+			transform.Translate(Vector2.down);
+		}
+		if (Input.GetKeyDown(KeyCode.D)) {
+			transform.Translate(Vector2.right);
+		}
 	}
 
 	void LateUpdate() {

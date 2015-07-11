@@ -46,6 +46,8 @@ MonoBehaviour:
   MenuSpritePrefab: {fileID: 107684, guid: 2fb35b4665d0c4b819781a42fe63b927, type: 2}
   moveOnly: {fileID: 21300002, guid: 5c06c6272ec6940c78fff352f1738998, type: 3}
   attackSprite: {fileID: 21300000, guid: 5c06c6272ec6940c78fff352f1738998, type: 3}
+  cancelMovementSprite: {fileID: 21300004, guid: 5c06c6272ec6940c78fff352f1738998,
+    type: 3}
 --- !u!114 &11452602
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -122,6 +124,11 @@ Prefab:
       propertyPath: UnitPrefab
       value: 
       objectReference: {fileID: 142718, guid: ab3ade8fb268d40e295ac022cfd45d70, type: 2}
+    - target: {fileID: 0}
+      propertyPath: cancelMovementSprite
+      value: 
+      objectReference: {fileID: 21300004, guid: 5c06c6272ec6940c78fff352f1738998,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 170800}

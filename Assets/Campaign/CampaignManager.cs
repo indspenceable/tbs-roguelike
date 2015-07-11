@@ -5,9 +5,7 @@ using System.Collections.Generic;
 
 public class CampaignManager : MonoBehaviour {
 	public static CampaignManager Instance;
-
-	// TODO FE sprites are here: http://www.feplanet.net/sprites-archive-overworld-sheets/7/1112/928
-
+	
 	[SerializeField]
 	private GameObject StagePrefab;
 	private StageManager currentStage = null;
