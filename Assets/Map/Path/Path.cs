@@ -39,7 +39,7 @@ public class Path {
 			foreach(Point dest in neighbors) {
 				Path newPath = new Path(current, dest);
 				if (onMap(dest, manager) && 
-				    newPath.cost(actor, manager) <= actor.movement &&
+				    newPath.cost(actor, manager) <= actor.stats.klass.Movement() &&
 				    notSeen(start, discoveredPaths, dest)) {
 					if (newPath.destination().Equals(target)) {
 						List<Path> rtn = new List<Path>(1);

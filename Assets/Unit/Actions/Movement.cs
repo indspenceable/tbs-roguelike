@@ -104,7 +104,7 @@ public class Movement : InputAction {
 				Path copyPath = new Path(currentPath);
 				copyPath.TrimTo(currentPath.at (i));
 				Path newPath = new Path(copyPath, t.p);
-				if (newPath.cost(actor, currentStage) <= actor.movement) {
+				if (newPath.cost(actor, currentStage) <= actor.stats.klass.Movement()) {
 					currentPath = newPath;
 					RecalculateHighlights();
 					return;

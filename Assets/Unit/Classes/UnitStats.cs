@@ -48,12 +48,16 @@ public abstract class UnitClass {
 		this.resistanceGrowth = resistanceGrowth;
 	}
 
-	public virtual int cost(Tile t) {
+	public virtual int Cost(Tile t) {
 		switch(t.terrain) {
 		case Terrain.Open: return 1;
 		case Terrain.Wall: return 999;
 		default: return 999;
 		}
+	}
+
+	public virtual int Movement() {
+		return 5;
 	}
 
 	public class Soldier : UnitClass {
@@ -68,8 +72,11 @@ public abstract class UnitClass {
 		public override int ClassId() {
 			return 1;
 		}
-		public override int cost(Tile t) {
+		public override int Cost(Tile t) {
 			return 1;
+		}
+		public override int Movement() {
+			return 7;
 		}
 	}
 }

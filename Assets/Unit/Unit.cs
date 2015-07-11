@@ -2,6 +2,10 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+/*
+ * Unit is the MonoBehavior for units. It's largely a wrapper around UnitStats.
+ */
+
 public class Unit : MonoBehaviour {
 	public enum Team {
 		PLAYER = 0,
@@ -19,7 +23,6 @@ public class Unit : MonoBehaviour {
 	}
 
 	public Tile tile;
-	public int movement = 5;
 
 	private Team _team;
 	public Team team {
@@ -65,6 +68,6 @@ public class Unit : MonoBehaviour {
 			// TODO check the team - only apply cost if they're enemies.
 			return 999;
 		}
-		return this.stats.klass.cost (t);
+		return this.stats.klass.Cost (t);
 	}
 }
