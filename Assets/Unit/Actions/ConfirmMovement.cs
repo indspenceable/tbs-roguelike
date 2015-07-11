@@ -66,6 +66,10 @@ public class ConfirmMovement : MonoBehaviour, MenuInput<ConfirmMovement.UnitActi
 		int c = menuOptions.Count;
 		List<Vector3> endingPositions = new List<Vector3>(c);
 
+		foreach (GameObject option in menuOptions) {
+			option.GetComponent<Collider2D>().enabled = false;
+		}
+
 		MenuPlacementManager menuPlacementManager = new ArcMenuPlacementManager(c);
 		for (int i = 0; i < c; i+= 1) {
 			endingPositions.Add(menuPlacementManager.placement(i) + actor.transform.position);
@@ -83,6 +87,9 @@ public class ConfirmMovement : MonoBehaviour, MenuInput<ConfirmMovement.UnitActi
 			}
 
 			yield return null;
+		}
+		foreach (GameObject option in menuOptions) {
+			option.GetComponent<Collider2D>().enabled = true;
 		}
 	}
 
