@@ -7,10 +7,6 @@ public class Unit : MonoBehaviour {
 		PLAYER = 0,
 		BADDIE = 1
 	}
-	public enum Klass {
-		SWORDFIGHTER = 0,
-		FLYER = 1 
-	}
 
 	Animator animator;
 	SpriteRenderer spriteRenderer;
@@ -18,7 +14,7 @@ public class Unit : MonoBehaviour {
 		animator = GetComponent<Animator>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		animator.SetInteger("team", (int)team);
-		animator.SetInteger("class", (int)klass);
+		animator.SetInteger("class", (int)stats.klass.ClassId());
 		animator.SetInteger("animation", 0);
 	}
 
@@ -37,19 +33,8 @@ public class Unit : MonoBehaviour {
 			_team = value;
 		}
 	}
-	private Klass _klass;
-	public Klass klass {
-		get {
-			return _klass;
-		}
-		set {
-			if (animator != null) {
-				animator.SetInteger("class", (int)value);
-			}
-			_klass = value;
-		}
-	}
 
+	public UnitStats stats;
 
 	public int hp = 10;
 
@@ -80,10 +65,6 @@ public class Unit : MonoBehaviour {
 			// TODO check the team - only apply cost if they're enemies.
 			return 999;
 		}
-		switch(t.terrain) {
-		case Terrain.Open: return 1;
-		case Terrain.Wall: return 999;
-		default: return 999;
-		}
+		return this.stats.klass.cost (t);
 	}
 }

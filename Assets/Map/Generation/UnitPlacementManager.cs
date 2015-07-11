@@ -10,15 +10,15 @@ public class UnitPlacementManager : MonoBehaviour {
 	public List<Unit> setupUnits() {
 		List<Unit> unitList = new List<Unit>();
 		// For now, just generate a single unit at 3, 3
-		unitList.Add(createUnitAt(3, 3, Unit.Team.PLAYER, Unit.Klass.FLYER));
-		unitList.Add(createUnitAt(4, 3, Unit.Team.BADDIE, Unit.Klass.SWORDFIGHTER));
-		unitList.Add(createUnitAt(3, 4, Unit.Team.PLAYER, Unit.Klass.SWORDFIGHTER));
-		unitList.Add(createUnitAt(4, 4, Unit.Team.BADDIE, Unit.Klass.FLYER));
+		unitList.Add(createUnitAt(3, 3, Unit.Team.PLAYER, UnitStats.initAsEnemy(new UnitClass.Soldier(), 1, 1)));
+        unitList.Add(createUnitAt(4, 3, Unit.Team.BADDIE, UnitStats.initAsEnemy(new UnitClass.Flyer(), 1, 1)));
+		unitList.Add(createUnitAt(3, 4, Unit.Team.PLAYER, UnitStats.initAsEnemy(new UnitClass.Flyer(), 1, 1)));
+		unitList.Add(createUnitAt(4, 4, Unit.Team.BADDIE, UnitStats.initAsEnemy(new UnitClass.Soldier(), 1, 1)));
 
 		return unitList;
 	}
 
-	public Unit createUnitAt(int x, int y, Unit.Team team, Unit.Klass klass) {
+	public Unit createUnitAt(int x, int y, Unit.Team team, UnitStats stats) {
 		Tile t = GetComponent<StageManager>().tiles[x][y];
 		GameObject go = Instantiate(UnitPrefab, t.transform.position, Quaternion.identity) as GameObject;
 		go.transform.parent = transform;
@@ -26,7 +26,7 @@ public class UnitPlacementManager : MonoBehaviour {
 		u.tile = t;
 		t.unit = u;
 		u.team = team;
-		u.klass = klass;
+		u.stats = stats;
 
 		return u;
 	}
