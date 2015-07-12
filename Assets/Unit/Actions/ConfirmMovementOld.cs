@@ -35,7 +35,7 @@ public class ConfirmMovementOld : InputAction {
 		highlighter.highlight(actor.tile.p, Highlight.Style.BLUE);
 	}
 
-	public void OnUnitClicked (Unit u)
+	public void OnUnitClicked (Unit u, InputManager.MouseButton button)
 	{
 		Debug.Log (this.actor);
 		if (u == actor) {
@@ -49,7 +49,7 @@ public class ConfirmMovementOld : InputAction {
 			}
 		}
 	}
-	public void OnTileClicked (Tile t)
+	public void OnTileClicked (Tile t, InputManager.MouseButton button)
 	{
 	}
 	public void OnTileHovered (Tile t)

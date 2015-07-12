@@ -14,10 +14,19 @@ public class Tile : MonoBehaviour {
 	}
 
 	public void OnMouseDown() {
-		if (unit == null) {
-			currentStage.InputManager.OnTileClicked(this);
+		InputManager.MouseButton button;
+		if (Input.GetMouseButtonDown(0)) {
+			button = InputManager.MouseButton.LEFT;
+		} else if (Input.GetMouseButtonDown(1)) {
+			button = InputManager.MouseButton.RIGHT;
 		} else {
-			currentStage.InputManager.OnUnitClicked(unit);
+			button = InputManager.MouseButton.MIDDLE;
+		}
+
+		if (unit == null) {
+			currentStage.InputManager.OnTileClicked(this, button);
+		} else {
+			currentStage.InputManager.OnUnitClicked(unit, button);
 		}
 	}
 }

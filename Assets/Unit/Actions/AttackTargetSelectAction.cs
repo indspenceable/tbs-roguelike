@@ -50,12 +50,12 @@ public class AttackTargetSelectAction : InputAction {
 		}
 	}
 
-	public void OnUnitClicked(Unit u) {
+	public void OnUnitClicked(Unit u, InputManager.MouseButton button) {
 		if (targetableUnits.Contains(u)) {
 			currentStage.StartCoroutine(onTriggerAttack(u));
 		}
 	}
-	public void OnTileClicked(Tile t) {
+	public void OnTileClicked(Tile t, InputManager.MouseButton button) {
 		// Clicking on a tile does nothing.
 	}
 	public void OnTileHovered(Tile t) {

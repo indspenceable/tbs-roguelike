@@ -11,7 +11,7 @@ public class CameraDrag : MonoBehaviour
 		cam = GetComponent<Camera>();
 	}
 
-	void Update()
+	void LateUpdate()
 	{
 		if(Input.GetMouseButtonDown(1))
 		{
@@ -37,9 +37,6 @@ public class CameraDrag : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.D)) {
 			transform.Translate(Vector2.right);
 		}
-	}
-
-	void LateUpdate() {
 	}
 	
 	Vector3 worldPointForCurrentMouse() {

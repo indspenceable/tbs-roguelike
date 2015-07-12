@@ -32,6 +32,7 @@ public class Movement : InputAction {
 		for(int i = 0; i < currentPath.distance() - 1; i+= 1) {
 			highlighter.highlightPath(currentPath.at(i), currentPath.at(i+1));
 		}
+		highlighter.highlight(actor.tile.p, Highlight.Style.BLUE);
 	}
 
 	public static IEnumerator moveUnitAlongPath(float time, Unit u, Path path, StageManager stage) {
@@ -73,12 +74,12 @@ public class Movement : InputAction {
 	}
 
 
-	public void OnUnitClicked(Unit u) {
+	public void OnUnitClicked(Unit u, InputManager.MouseButton button) {
 		if (u == actor) {
-			OnTileClicked(u.tile);
+			OnTileClicked(u.tile, button);
 		}
 	}
-	public void OnTileClicked(Tile t) {
+	public void OnTileClicked(Tile t, InputManager.MouseButton button) {
 		// We allow you to move to an uninhabited tile only;
 		// the tile hover logic should cover moving to valid tiles
 		if (t.p.Equals(currentPath.destination())) {

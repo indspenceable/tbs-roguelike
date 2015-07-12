@@ -31,8 +31,9 @@ public class Highlighter : MonoBehaviour {
 	}
 	
 	// TODO -  this should actually draw arrows! WOMPITY WOMP.
-	public void highlightPath(Point previousPoint, Point p) {
-		highlight(p, Highlight.Style.BLUE);
+	public void highlightPath(Point previousPoint, Point currentPoint) {
+		highlight(previousPoint, Highlight.Style.BLUE);
+		highlight(currentPoint, Highlight.Style.BLUE);
 	}
 	
 	public void removeAllHighlights() {

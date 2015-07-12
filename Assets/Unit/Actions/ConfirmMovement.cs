@@ -22,8 +22,8 @@ public class ConfirmMovement : MonoBehaviour, MenuInput<ConfirmMovement.UnitActi
 	private StageManager currentStage;
 
 	// No Map Inputs
-	public void OnUnitClicked (Unit u) {}
-	public void OnTileClicked (Tile t) {}
+	public void OnUnitClicked (Unit u, InputManager.MouseButton button) {}
+	public void OnTileClicked (Tile t, InputManager.MouseButton button) {}
 	public void OnTileHovered (Tile t) {}
 
 	public enum UnitAction {

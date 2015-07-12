@@ -11,15 +11,22 @@ public class InputManager : MonoBehaviour {
 		UI = GameObject.FindGameObjectWithTag("levelUI").GetComponent<UIManager>();
 	}
 
+	public enum MouseButton {
+		LEFT,
+		RIGHT,
+		MIDDLE,
+	}
+
 	public void TileHovered(Tile t) {
 		if (currentHoveredTile == t) {
 			return;
 		}
 		currentHoveredTile = t;
-		FixUIForTileHovered(t);
 
 		if (currentAction != null) {
 			currentAction.OnTileHovered(t);
+		} else {
+			FixUIForTileHovered(t);
 		}
 	}
 
@@ -27,20 +34,26 @@ public class InputManager : MonoBehaviour {
 		if (t.unit != null) {
 			Unit u = t.unit;
 			UI.CurrentUnit(u);
+			UI.Show (true);
+		} else {
+			if (UI != null) {
+				UI.Show(false);
+			}
 		}
-		UI.CurrentTile(t);
 	}
 
 	public void StopTileHovered(Tile t) {
 	}
 
-	public void OnTileClicked(Tile t) {
+	public void OnTileClicked(Tile t, MouseButton button) {
 		if (currentAction != null) {
-			currentAction.OnTileClicked(t);
+			currentAction.OnTileClicked(t, button);
 		}
 	}
 
-	public void OnUnitClicked (Unit unit)
+
+
+	public void OnUnitClicked (Unit unit, MouseButton button)
 	{
 		if (currentAction == null) {
 		    if (unit.team == Unit.Team.PLAYER && !unit.usedThisTurn) {
@@ -49,7 +62,7 @@ public class InputManager : MonoBehaviour {
 				currentAction = m;
 			}
 		} else {
-			currentAction.OnUnitClicked(unit);
+			currentAction.OnUnitClicked(unit, button);
 		}
 	}
 }
